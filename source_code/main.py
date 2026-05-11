@@ -1,32 +1,14 @@
 from board import Board
 from ai import AI
 
-
 def print_banner():
     print("=" * 45)
     print("       TRÒ CHƠI CỜ CARO  (4 quân liên tiếp)")
-    print("       Người: X   |   Máy: O")
+    print("       Người: X   |   Nanh: O")
     print("=" * 45)
 
-
 def choose_settings():
-    """Cho người chơi chọn độ khó và thuật toán."""
-    print("\nChọn độ khó:")
-    print("  1. Dễ   (depth=2, Minimax)")
-    print("  2. Vừa  (depth=3, Alpha-Beta)")
-    print("  3. Khó  (depth=4, Alpha-Beta)  ← khuyến nghị")
-    print("  4. Siêu khó (depth=5, Alpha-Beta, chậm hơn)")
-
-    choice = input("Nhập lựa chọn (1-4, mặc định 3): ").strip()
-    settings = {
-        '1': (2, False),
-        '2': (3, True),
-        '3': (4, True),
-        '4': (5, True),
-    }
-    depth, use_ab = settings.get(choice, (4, True))
-    return depth, use_ab
-
+    return 4, True
 
 def play_game():
     print_banner()
@@ -39,7 +21,7 @@ def play_game():
     board.display()
 
     while True:
-        # ── LƯỢT NGƯỜI (X) ──────────────────────────────────────────
+
         print("Lượt của bạn (X).")
         while True:
             try:
@@ -61,23 +43,21 @@ def play_game():
             _print_result(result)
             break
 
-        # ── LƯỢT MÁY (O) ────────────────────────────────────────────
-        print("Máy (O) đang suy nghĩ...")
+        print("Nanh (O) đang suy nghĩ...")
         best_move, best_score, stats = ai.get_best_move(board, use_alphabeta=use_alphabeta)
 
         if best_move is None:
-            print("Máy không tìm được nước đi hợp lệ!")
+            print("Nanh không tìm được nước đi hợp lệ!")
             break
 
         board.make_move(best_move[0], best_move[1], 'O')
-        print(f"\n=> Máy đánh tại: {best_move}\n")
+        print(f"\n=> Nanh đánh tại: {best_move}\n")
         board.display()
 
         result = board.is_game_over()
         if result:
             _print_result(result)
             break
-
 
 def _print_result(result):
     print("=" * 45)
@@ -86,9 +66,8 @@ def _print_result(result):
     elif result == 'X':
         print("  🎉 Chúc mừng! Bạn (X) đã THẮNG!")
     elif result == 'O':
-        print("  🤖 Máy (O) đã THẮNG! Chúc bạn may mắn lần sau.")
+        print("  🤖 Nanh (O) đã THẮNG! Chúc bạn may mắn lần sau.")
     print("=" * 45)
-
 
 if __name__ == "__main__":
     play_game()
