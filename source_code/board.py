@@ -1,49 +1,50 @@
 class Board:
     def __init__(self, size=9):
-        # Cài đặt bàn cờ kích thước tối thiểu 9x9
         self.size = size
         self.grid = [['.' for _ in range(size)] for _ in range(size)]
 
     def display(self):
-        print("  " + " ".join([str(i) for i in range(self.size)]))
+        # Header cột: mỗi cột rộng 2 ký tự, căn giữa
+        print("   " + " ".join(f"{i:2}" for i in range(self.size)))
         for r in range(self.size):
-            print(f"{r} " + " ".join(self.grid[r]))
+            # Số hàng rộng 2 ký tự, mỗi ô cũng rộng 2 ký tự
+            row_str = " ".join(f"{cell:>2}" for cell in self.grid[r])
+            print(f"{r:2} {row_str}")
         print()
 
-    def get_valid_moves(self):
-        moves = []
-        has_pieces = False
-        
-        # Kiểm tra xem bàn cờ đã có quân nào chưa
+    def get_valid_moves(self, radius=2):
+        """
+        Sinh nước đi hợp lệ: chỉ các ô trống trong bán kính `radius`
+        xung quanh các quân đã đánh. Bán kính 2 giúp AI nhìn xa hơn.
+        """
+        if not self._has_pieces():
+            return [(self.size // 2, self.size // 2)]
+
+        candidates = set()
         for r in range(self.size):
             for c in range(self.size):
                 if self.grid[r][c] != '.':
-                    has_pieces = True
-                    break
-            if has_pieces: break
+                    for dr in range(-radius, radius + 1):
+                        for dc in range(-radius, radius + 1):
+                            nr, nc = r + dr, c + dc
+                            if (0 <= nr < self.size and 0 <= nc < self.size
+                                    and self.grid[nr][nc] == '.'):
+                                candidates.add((nr, nc))
+        return list(candidates)
 
-        # Nếu bàn cờ trống, ưu tiên đánh vào giữa bàn cờ
-        if not has_pieces:
-            return [(self.size // 2, self.size // 2)]
+    def _has_pieces(self):
+        for r in range(self.size):
+            for c in range(self.size):
+                if self.grid[r][c] != '.':
+                    return True
+        return False
 
-        # Nếu đã có quân, chỉ sinh các nước đi ở ô trống sát cạnh các quân đã đánh (bán kính 1 ô)
+    def is_full(self):
         for r in range(self.size):
             for c in range(self.size):
                 if self.grid[r][c] == '.':
-                    is_near = False
-                    for dr in [-1, 0, 1]:
-                        for dc in [-1, 0, 1]:
-                            if dr == 0 and dc == 0: continue
-                            nr, nc = r + dr, c + dc
-                            if 0 <= nr < self.size and 0 <= nc < self.size:
-                                if self.grid[nr][nc] != '.':
-                                    is_near = True
-                                    break
-                        if is_near: break
-                    
-                    if is_near:
-                        moves.append((r, c))
-        return moves
+                    return False
+        return True
 
     def make_move(self, r, c, player):
         if 0 <= r < self.size and 0 <= c < self.size and self.grid[r][c] == '.':
@@ -52,11 +53,10 @@ class Board:
         return False
 
     def undo_move(self, r, c):
-        # Rất quan trọng cho thuật toán đệ quy Minimax
         self.grid[r][c] = '.'
 
     def check_win(self, player):
-        # Kiểm tra 4 quân liên tiếp (ngang, dọc, chéo), không xét chặn 2 đầu
+        """Kiểm tra 4 quân liên tiếp theo 4 hướng."""
         directions = [(0, 1), (1, 0), (1, 1), (1, -1)]
         for r in range(self.size):
             for c in range(self.size):
@@ -65,7 +65,8 @@ class Board:
                         count = 1
                         for i in range(1, 4):
                             nr, nc = r + dr * i, c + dc * i
-                            if 0 <= nr < self.size and 0 <= nc < self.size and self.grid[nr][nc] == player:
+                            if (0 <= nr < self.size and 0 <= nc < self.size
+                                    and self.grid[nr][nc] == player):
                                 count += 1
                             else:
                                 break
@@ -74,8 +75,14 @@ class Board:
         return False
 
     def is_game_over(self):
-        # Trạng thái kết thúc: X thắng, O thắng hoặc Hòa
-        if self.check_win('X'): return 'X'
-        if self.check_win('O'): return 'O'
-        if len(self.get_valid_moves()) == 0: return 'Draw'
+        """
+        Trả về: 'X' | 'O' | 'Draw' | None
+        BUG FIX: dùng is_full() thay vì get_valid_moves() để kiểm tra hòa.
+        """
+        if self.check_win('X'):
+            return 'X'
+        if self.check_win('O'):
+            return 'O'
+        if self.is_full():
+            return 'Draw'
         return None
