@@ -4,10 +4,8 @@ class Board:
         self.grid = [['.' for _ in range(size)] for _ in range(size)]
 
     def display(self):
-        # Header cột: mỗi cột rộng 2 ký tự, căn giữa
         print("   " + " ".join(f"{i:2}" for i in range(self.size)))
         for r in range(self.size):
-            # Số hàng rộng 2 ký tự, mỗi ô cũng rộng 2 ký tự
             row_str = " ".join(f"{cell:>2}" for cell in self.grid[r])
             print(f"{r:2} {row_str}")
         print()
