@@ -95,7 +95,7 @@ def draw_panel(surface, font_big, font_med, font_sm, status, turn, move_log, res
     surface.blit(title, (px + PANEL_W//2 - title.get_width()//2, y))
     y += 38
 
-    sub = font_sm.render("4 quân liên tiếp", True, MUTED)
+    sub = font_sm.render("4 quan lien tiep", True, MUTED)
     surface.blit(sub, (px + PANEL_W//2 - sub.get_width()//2, y))
     y += 36
 
@@ -104,24 +104,24 @@ def draw_panel(surface, font_big, font_med, font_sm, status, turn, move_log, res
 
     if not result:
         if turn == 'X':
-            label = font_med.render("Lượt của bạn", True, X_COLOR)
+            label = font_med.render("Luot cua ban (X)", True, X_COLOR)
         else:
-            label = font_med.render("Nanh suy nghĩ...", True, O_COLOR)
+            label = font_med.render("Nanh suy nghi...", True, O_COLOR)
         surface.blit(label, (px + PANEL_W//2 - label.get_width()//2, y))
     else:
         if result == 'Draw':
-            label = font_med.render("HÒA!", True, TEXT_COLOR)
+            label = font_med.render("HOA!", True, TEXT_COLOR)
         elif result == 'X':
-            label = font_med.render("Bạn thắng! 🎉", True, X_COLOR)
+            label = font_med.render("Ban thang! (X)", True, X_COLOR)
         else:
-            label = font_med.render("Nanh thắng!", True, O_COLOR)
+            label = font_med.render("Nanh thang! (O)", True, O_COLOR)
         surface.blit(label, (px + PANEL_W//2 - label.get_width()//2, y))
     y += 36
 
     pygame.draw.line(surface, GRID_COLOR, (px+16, y), (px+PANEL_W-16, y), 1)
     y += 14
 
-    log_title = font_sm.render("Lịch sử nước đi", True, MUTED)
+    log_title = font_sm.render("Lich su nuoc di", True, MUTED)
     surface.blit(log_title, (px+16, y))
     y += 22
 
@@ -131,7 +131,7 @@ def draw_panel(surface, font_big, font_med, font_sm, status, turn, move_log, res
         y += 18
 
     btn_y = WIN_H - 56
-    return draw_button(surface, font_sm, px+20, btn_y, PANEL_W-40, 36, "Chơi lại")
+    return draw_button(surface, font_sm, px+20, btn_y, PANEL_W-40, 36, "Choi lai")
 
 def draw_button(surface, font, x, y, w, h, text):
     rect = pygame.Rect(x, y, w, h)
@@ -154,7 +154,7 @@ def get_cell(mx, my):
 def main():
     pygame.init()
     screen = pygame.display.set_mode((WIN_W, WIN_H))
-    pygame.display.set_caption("Cờ Caro — vs Nanh")
+    pygame.display.set_caption("Co Caro — vs Nanh")
     clock = pygame.time.Clock()
 
     try:
@@ -167,6 +167,7 @@ def main():
         font_sm  = pygame.font.SysFont(None, 15)
 
     def reset():
+        # Người = X đi trước, máy = O
         return Board(BOARD_SIZE), AI(player='O', max_depth=8), 'X', [], None, None, False
 
     board, ai, turn, move_log, result, win_cells, ai_thinking = reset()
@@ -179,6 +180,7 @@ def main():
         clock.tick(60)
         mx, my = pygame.mouse.get_pos()
         cell = get_cell(mx, my)
+        # Hover chỉ hiện khi đến lượt người (X)
         hover = cell if cell and board.grid[cell[0]][cell[1]] == '.' and not result and turn == 'X' else None
 
         for event in pygame.event.get():
@@ -192,11 +194,12 @@ def main():
                     board, ai, turn, move_log, result, win_cells, ai_thinking = reset()
                     continue
 
+                # Chỉ cho người (X) click khi đến lượt X
                 if result or turn != 'X' or ai_thinking:
                     continue
 
                 if cell and board.make_move(cell[0], cell[1], 'X'):
-                    move_log.append(f"Bạn   ({cell[0]},{cell[1]})")
+                    move_log.append(f"Ban   ({cell[0]},{cell[1]})")
                     result = board.is_game_over()
                     if result:
                         win_cells = get_win_cells(board, result) if result != 'Draw' else None
