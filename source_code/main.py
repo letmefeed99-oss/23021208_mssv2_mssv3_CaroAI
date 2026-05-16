@@ -8,7 +8,30 @@ def print_banner():
     print("=" * 45)
 
 def choose_settings():
-    return 4, True
+    # ── Chọn thuật toán ──────────────────────────────
+    print("\nChọn thuật toán AI:")
+    print("  1. Minimax")
+    print("  2. Alpha-Beta (khuyên dùng)")
+    while True:
+        choice = input("Nhập 1 hoặc 2: ").strip()
+        if choice in ('1', '2'):
+            use_alphabeta = (choice == '2')
+            break
+        print("Vui lòng nhập 1 hoặc 2.")
+
+    # ── Chọn độ sâu ──────────────────────────────────
+    print("\nChọn độ sâu tìm kiếm (càng cao AI càng mạnh nhưng chậm hơn):")
+    print("  Gợi ý: 2–3 cho Minimax, 4–6 cho Alpha-Beta")
+    while True:
+        try:
+            depth = int(input("Nhập độ sâu (1-8): ").strip())
+            if 1 <= depth <= 8:
+                break
+            print("Độ sâu phải từ 1 đến 8.")
+        except ValueError:
+            print("Vui lòng nhập một số nguyên.")
+
+    return depth, use_alphabeta
 
 def play_game():
     print_banner()
