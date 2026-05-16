@@ -12,20 +12,22 @@ SCORE_TABLE = {
     (2, 0): 0,
 }
 
-TIME_LIMIT   = 2.8
-MAX_CAND     = 12
-MAX_DEPTH    = 8
+TIME_LIMIT = 2.8
+MAX_CAND   = 12
+MAX_DEPTH  = 8
+
+THREAT_URGENT = 400_000
+
 
 class AI:
     def __init__(self, player='O', max_depth=MAX_DEPTH):
-        self.player        = player
-        self.opponent      = 'X' if player == 'O' else 'O'
-        self.max_depth     = max_depth
+        self.player         = player
+        self.opponent       = 'X' if player == 'O' else 'O'
+        self.max_depth      = max_depth
         self.states_visited = 0
-        self._start_time   = 0
-        self._timeout      = False
-
-        self._killers      = [[None, None] for _ in range(MAX_DEPTH + 2)]
+        self._start_time    = 0
+        self._timeout       = False
+        self._killers       = [[None, None] for _ in range(MAX_DEPTH + 2)]
 
     def _check_time(self):
         if time.time() - self._start_time >= TIME_LIMIT:
@@ -38,7 +40,7 @@ class AI:
         my_s  += self._double_threat_bonus(board, self.player)
         opp_s += self._double_threat_bonus(board, self.opponent)
 
-        return my_s - int(opp_s * 1.3)
+        return my_s - int(opp_s * 1.5)
 
     def _score_board(self, board, player):
         total = 0
@@ -126,28 +128,88 @@ class AI:
         grid = board.grid
 
         for dr, dc in directions:
-            count = 1
+            count    = 1
             open_ends = 0
 
-            for i in range(1, 4):
+            for i in range(1, 5):
                 nr, nc = r - dr * i, c - dc * i
                 if 0 <= nr < size and 0 <= nc < size:
-                    if grid[nr][nc] == player:   count += 1
-                    elif grid[nr][nc] == '.':    open_ends += 1; break
-                    else:                        break
-                else: break
+                    if grid[nr][nc] == player:
+                        count += 1
+                    elif grid[nr][nc] == '.':
+                        open_ends += 1
+                        break
+                    else:
+                        break
+                else:
+                    break
 
-            for i in range(1, 4):
+            for i in range(1, 5):
                 nr, nc = r + dr * i, c + dc * i
                 if 0 <= nr < size and 0 <= nc < size:
-                    if grid[nr][nc] == player:   count += 1
-                    elif grid[nr][nc] == '.':    open_ends += 1; break
-                    else:                        break
-                else: break
+                    if grid[nr][nc] == player:
+                        count += 1
+                    elif grid[nr][nc] == '.':
+                        open_ends += 1
+                        break
+                    else:
+                        break
+                else:
+                    break
 
             score += SCORE_TABLE.get((min(count, 4), open_ends), 0)
 
         return score
+
+    def _count_threats(self, board, player, threshold=THREAT_URGENT):
+        threats = []
+        for r, c in board.get_valid_moves():
+            board.grid[r][c] = player
+            s = self._quick_score(board, r, c, player)
+            board.grid[r][c] = '.'
+            if s >= threshold:
+                threats.append((r, c, s))
+        return threats
+
+    def _find_urgent_move(self, board):
+        moves = board.get_valid_moves()
+
+        for r, c in moves:
+            board.grid[r][c] = self.player
+            win = board.check_win(self.player)
+            board.grid[r][c] = '.'
+            if win:
+                return (r, c)
+
+        for r, c in moves:
+            board.grid[r][c] = self.opponent
+            win = board.check_win(self.opponent)
+            board.grid[r][c] = '.'
+            if win:
+                return (r, c)
+
+        opp_threats = self._count_threats(board, self.opponent, threshold=THREAT_URGENT)
+        if len(opp_threats) >= 1:
+            best_block = None
+            best_val   = -1
+            for r, c in moves:
+                board.grid[r][c] = self.player
+                atk = self._quick_score(board, r, c, self.player)
+                board.grid[r][c] = '.'
+
+                board.grid[r][c] = self.opponent
+                dfn = self._quick_score(board, r, c, self.opponent)
+                board.grid[r][c] = '.'
+
+                val = dfn * 2.0 + atk
+                if val > best_val:
+                    best_val   = val
+                    best_block = (r, c)
+
+            if len(opp_threats) >= 2 or opp_threats[0][2] >= 400_000:
+                return best_block
+
+        return None
 
     def _order_and_limit(self, board, moves, is_maximizing, depth):
         player   = self.player   if is_maximizing else self.opponent
@@ -156,9 +218,10 @@ class AI:
         killer_a, killer_b = self._killers[depth]
 
         def score_move(move):
-
-            if move == killer_a: return 999_999_999
-            if move == killer_b: return 999_999_998
+            if move == killer_a:
+                return 999_999_999
+            if move == killer_b:
+                return 999_999_998
 
             r, c = move
             board.grid[r][c] = player
@@ -169,7 +232,7 @@ class AI:
             dfn = self._quick_score(board, r, c, opponent)
             board.grid[r][c] = '.'
 
-            return atk * 1.0 + dfn * 1.3
+            return atk * 1.0 + dfn * 1.5
 
         scored = sorted(moves, key=score_move, reverse=True)
         return scored[:MAX_CAND]
@@ -190,6 +253,7 @@ class AI:
         if depth == 0:              return self.evaluate(board)
 
         moves = board.get_valid_moves()
+        moves = self._order_and_limit(board, moves, is_maximizing, depth)
 
         if is_maximizing:
             best = -float('inf')
@@ -256,21 +320,37 @@ class AI:
         self._timeout       = False
         self._killers       = [[None, None] for _ in range(MAX_DEPTH + 2)]
 
-        best_move  = None
-        best_score = -float('inf')
-        final_depth = 1
-
         moves = board.get_valid_moves()
         if not moves:
             return None, 0, {}
 
-        for depth in range(1, MAX_DEPTH + 1):
+        urgent = self._find_urgent_move(board)
+        if urgent:
+            execution_time = time.time() - self._start_time
+            algo_name = "Urgent Move"
+            stats = {
+                'algorithm': algo_name,
+                'depth': 0,
+                'states': 1,
+                'time': execution_time,
+                'move': urgent,
+                'score': 10_000_000,
+            }
+            print(f"[{algo_name}] Nước đi khẩn cấp: {urgent} | "
+                  f"Thời gian: {execution_time:.3f}s")
+            return urgent, 10_000_000, stats
+
+        best_move   = None
+        best_score  = -float('inf')
+        final_depth = 1
+
+        for depth in range(1, self.max_depth + 1):
             if self._timeout:
                 break
 
-            self._timeout = False
-            candidate_move  = None
-            candidate_score = -float('inf')
+            self._timeout      = False
+            candidate_move     = None
+            candidate_score    = -float('inf')
 
             ordered = self._order_and_limit(board, moves, is_maximizing=True, depth=depth)
 
@@ -290,8 +370,8 @@ class AI:
                     candidate_move  = (r, c)
 
             if not self._timeout and candidate_move is not None:
-                best_move  = candidate_move
-                best_score = candidate_score
+                best_move   = candidate_move
+                best_score  = candidate_score
                 final_depth = depth
 
         execution_time = time.time() - self._start_time
