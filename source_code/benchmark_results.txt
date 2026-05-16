@@ -1,0 +1,148 @@
+======================================================================
+  BENCHMARK: So sánh Minimax vs Alpha-Beta
+  Caro 4 quân liên tiếp, bàn 9x9, AI = O (MAX)
+======================================================================
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  Trạng thái 1 — Đầu ván (chỉ 2 quân)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  Bàn cờ:
+        0  1  2  3  4  5  6  7  8
+     0  .  .  .  .  .  .  .  .  .
+     1  .  .  .  .  .  .  .  .  .
+     2  .  .  .  .  .  .  .  .  .
+     3  .  .  .  .  .  .  .  .  .
+     4  .  .  .  .  X  O  .  .  .
+     5  .  .  .  .  .  .  .  .  .
+     6  .  .  .  .  .  .  .  .  .
+     7  .  .  .  .  .  .  .  .  .
+     8  .  .  .  .  .  .  .  .  .
+    
+  Độ sâu 2:
+    Minimax    — nước đi: (3, 4)        trạng thái:      168  thời gian: 0.010s  depth thực: 2
+    Alpha-Beta — nước đi: (3, 4)        trạng thái:      168  thời gian: 0.010s  depth thực: 2
+    Cùng nước đi: ✓ Có  |  Alpha-Beta tiết kiệm: 0 trạng thái (0.0%)
+  Độ sâu 3:
+    Minimax    — nước đi: (3, 4)        trạng thái:    2,052  thời gian: 0.130s  depth thực: 3
+    Alpha-Beta — nước đi: (3, 4)        trạng thái:      710  thời gian: 0.063s  depth thực: 3
+    Cùng nước đi: ✓ Có  |  Alpha-Beta tiết kiệm: 1,342 trạng thái (65.4%)
+  Độ sâu 4:
+    Minimax    — nước đi: (3, 4)        trạng thái:   24,672  thời gian: 1.730s  depth thực: 4
+    Alpha-Beta — nước đi: (3, 4)        trạng thái:    4,239  thời gian: 0.378s  depth thực: 4
+    Cùng nước đi: ✓ Có  |  Alpha-Beta tiết kiệm: 20,433 trạng thái (82.8%)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  Trạng thái 2 — Giữa ván cân bằng (hai bên có chuỗi 2)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  Bàn cờ:
+        0  1  2  3  4  5  6  7  8
+     0  .  .  .  .  .  .  .  .  .
+     1  .  .  .  .  .  .  .  .  .
+     2  .  .  .  .  .  .  .  .  .
+     3  .  .  .  .  .  X  X  .  .
+     4  .  .  .  X  X  .  .  .  .
+     5  .  .  .  .  .  O  O  .  .
+     6  .  .  .  O  O  .  .  .  .
+     7  .  .  .  .  .  .  .  .  .
+     8  .  .  .  .  .  .  .  .  .
+    
+  Độ sâu 2:
+    Minimax    — nước đi: (6, 5)        trạng thái:      168  thời gian: 0.017s  depth thực: 2
+    Alpha-Beta — nước đi: (6, 5)        trạng thái:      168  thời gian: 0.017s  depth thực: 2
+    Cùng nước đi: ✓ Có  |  Alpha-Beta tiết kiệm: 0 trạng thái (0.0%)
+  Độ sâu 3:
+    Minimax    — nước đi: (5, 4)        trạng thái:    2,052  thời gian: 0.200s  depth thực: 3
+    Alpha-Beta — nước đi: (5, 4)        trạng thái:      693  thời gian: 0.092s  depth thực: 3
+    Cùng nước đi: ✓ Có  |  Alpha-Beta tiết kiệm: 1,359 trạng thái (66.2%)
+  Độ sâu 4:
+    Minimax    — nước đi: (5, 4)        trạng thái:   22,824  thời gian: 2.311s  depth thực: 4
+    Alpha-Beta — nước đi: (5, 4)        trạng thái:    2,256  thời gian: 0.303s  depth thực: 4
+    Cùng nước đi: ✓ Có  |  Alpha-Beta tiết kiệm: 20,568 trạng thái (90.1%)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  Trạng thái 3 — AI (O) có lợi thế tấn công nhẹ
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  Bàn cờ:
+        0  1  2  3  4  5  6  7  8
+     0  .  .  .  .  .  .  .  .  .
+     1  .  .  .  .  .  .  .  .  .
+     2  .  .  .  .  .  .  .  X  .
+     3  .  .  .  O  .  .  .  .  .
+     4  .  .  .  .  O  O  .  .  .
+     5  .  .  .  .  X  X  .  .  .
+     6  .  .  .  .  .  .  X  .  .
+     7  .  .  O  .  .  .  .  .  .
+     8  .  .  .  .  .  .  .  .  .
+    
+  Độ sâu 2:
+    Minimax    — nước đi: (5, 6)        trạng thái:      168  thời gian: 0.018s  depth thực: 2
+    Alpha-Beta — nước đi: (5, 6)        trạng thái:      168  thời gian: 0.017s  depth thực: 2
+    Cùng nước đi: ✓ Có  |  Alpha-Beta tiết kiệm: 0 trạng thái (0.0%)
+  Độ sâu 3:
+    Minimax    — nước đi: (4, 3)        trạng thái:    2,052  thời gian: 0.214s  depth thực: 3
+    Alpha-Beta — nước đi: (4, 3)        trạng thái:      729  thời gian: 0.108s  depth thực: 3
+    Cùng nước đi: ✓ Có  |  Alpha-Beta tiết kiệm: 1,323 trạng thái (64.5%)
+  Độ sâu 4:
+    Minimax    — nước đi: (4, 3)        trạng thái:   24,012  thời gian: 2.639s  depth thực: 4
+    Alpha-Beta — nước đi: (4, 3)        trạng thái:    3,504  thời gian: 0.519s  depth thực: 4
+    Cùng nước đi: ✓ Có  |  Alpha-Beta tiết kiệm: 20,508 trạng thái (85.4%)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  Trạng thái 4 — Người chơi (X) gây áp lực, AI cần phòng thủ
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  Bàn cờ:
+        0  1  2  3  4  5  6  7  8
+     0  .  .  .  .  .  .  .  .  .
+     1  .  .  .  .  .  .  .  .  .
+     2  .  .  .  .  .  .  .  .  .
+     3  .  .  .  X  X  .  O  .  .
+     4  .  .  .  X  X  .  O  .  .
+     5  .  .  .  .  .  .  O  .  .
+     6  .  .  .  .  .  O  .  .  .
+     7  .  .  .  .  .  .  .  .  .
+     8  .  .  .  .  .  .  .  .  .
+    
+  Độ sâu 2:
+    Minimax    — nước đi: (6, 6)        trạng thái:      144  thời gian: 0.014s  depth thực: 2
+    Alpha-Beta — nước đi: (6, 6)        trạng thái:      144  thời gian: 0.014s  depth thực: 2
+    Cùng nước đi: ✓ Có  |  Alpha-Beta tiết kiệm: 0 trạng thái (0.0%)
+  Độ sâu 3:
+    Minimax    — nước đi: (6, 6)        trạng thái:    1,716  thời gian: 0.160s  depth thực: 3
+    Alpha-Beta — nước đi: (6, 6)        trạng thái:      507  thời gian: 0.071s  depth thực: 3
+    Cùng nước đi: ✓ Có  |  Alpha-Beta tiết kiệm: 1,209 trạng thái (70.5%)
+  Độ sâu 4:
+    Minimax    — nước đi: (6, 6)        trạng thái:   17,928  thời gian: 1.779s  depth thực: 4
+    Alpha-Beta — nước đi: (6, 6)        trạng thái:    1,047  thời gian: 0.174s  depth thực: 4
+    Cùng nước đi: ✓ Có  |  Alpha-Beta tiết kiệm: 16,881 trạng thái (94.2%)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  Trạng thái 5 — Bàn cờ phức tạp (nhiều quân, nhiều hướng tấn công)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  Bàn cờ:
+        0  1  2  3  4  5  6  7  8
+     0  .  .  .  .  .  .  .  .  .
+     1  .  .  .  .  .  .  .  .  .
+     2  .  .  .  .  X  O  .  .  .
+     3  .  .  .  X  X  O  O  .  .
+     4  .  .  .  X  X  O  O  .  .
+     5  .  .  .  X  X  O  O  .  .
+     6  .  .  .  X  .  .  O  .  .
+     7  .  .  .  .  .  .  .  .  .
+     8  .  .  .  .  .  .  .  .  .
+    
+  Độ sâu 2:
+    Minimax    — nước đi: (6, 4)        trạng thái:       24  thời gian: 0.001s  depth thực: 2
+    Alpha-Beta — nước đi: (6, 4)        trạng thái:       24  thời gian: 0.001s  depth thực: 2
+    Cùng nước đi: ✓ Có  |  Alpha-Beta tiết kiệm: 0 trạng thái (0.0%)
+  Độ sâu 3:
+    Minimax    — nước đi: (6, 4)        trạng thái:       36  thời gian: 0.001s  depth thực: 3
+    Alpha-Beta — nước đi: (6, 4)        trạng thái:       36  thời gian: 0.001s  depth thực: 3
+    Cùng nước đi: ✓ Có  |  Alpha-Beta tiết kiệm: 0 trạng thái (0.0%)
+  Độ sâu 4:
+    Minimax    — nước đi: (6, 4)        trạng thái:       48  thời gian: 0.002s  depth thực: 4
+    Alpha-Beta — nước đi: (6, 4)        trạng thái:       48  thời gian: 0.001s  depth thực: 4
+    Cùng nước đi: ✓ Có  |  Alpha-Beta tiết kiệm: 0 trạng thái (0.0%)
+
+======================================================================
+  Kết thúc benchmark. Kết quả đã lưu vào benchmark_results.txt
+======================================================================
