@@ -1,4 +1,4 @@
-# 23021208_23021306_CaroAI
+# 23021208_23021306_23021310_CaroAI
 # Caro AI - Trí Tuệ Nhân Tạo
 
 **Chương trình chơi cờ Caro (4 quân liên tiếp) giữa Người và Máy**
