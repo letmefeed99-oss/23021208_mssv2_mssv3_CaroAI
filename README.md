@@ -35,7 +35,7 @@
 ##  Cài đặt
 
 1.Clone repository
-Link GitHub: https://github.com/letmefeed99-oss/23021208_mssv2_mssv3_CaroAI
+Link GitHub: (https://github.com/letmefeed99-oss/23021208_23021306_23021310_CaroAI)
 
 2. Cài đặt các thư viện
    pip install -r requirements.txt
